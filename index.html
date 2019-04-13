@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="newsApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Angular.js Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
+    <script>
+      var newsApp = angular.module('newsApp', ['ngRoute']);
+
+      newsApp.config(function($routeProvider) {
+        $routeProvider.
+          when('/', {
+            templateUrl: 'newsFeed.html',
+            controller: 'NewsCtrl'
+          }).
+          when('/:newAdded', {
+            templateUrl: 'addNews.html',
+            controller: 'NewsCtrl'
+          }).
+          otherwise({
+            redirectTo: '/'
+          });
+      });
+
+      newsApp.controller('NewsCtrl', function ($scope){
+        $scope.newsFeed = [
+          {"title": "China", "url": "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
+          {"title": "India", "url": "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
+          {"title": "United States of America", "url": "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
+        ];
+        
+        $scope.removeNews = function(n) {
+          var i = $scope.newsFeed.indexOf(n);
+          $scope.newsFeed.splice(i, 1);
+        };
+
+        $scope.addName = function() {
+          $scope.names.push($scope.enteredName);
+          $scope.enteredName = '';
+        };
+
+
+      });
+    </script>
+  </head>
+  <body>
+    <div ng-view></div>
+  </body>
+</html>

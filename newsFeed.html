@@ -1,0 +1,24 @@
+<div style="padding:50px">
+    <div>
+      <button type="submit">ADD</button>
+      <div style="float: right;">
+        <input ng-model="search.title" type="text"/>:Search
+      </div> 
+    </div>
+    <div ng-repeat="n in newsFeed |  filter:search" style="margin-top: 60px; display: block">
+      <div style="display: flex;
+      flex-direction: row;">
+        <img ng-src={{n.url}} alt="sorry cannot load img" height="300" />
+        <div>
+          <h2>{{n.title}}</h2>
+          <p>{{n.description}}</p>
+        </div>
+      </div>
+      <div style="display: flex;
+      flex-direction: row; float: right;">
+        <button type="submit">Edit</button>
+        <button type="submit" ng-click="removeNews(n)">Delete</button>
+      </div>
+    </div>
+    
+  </div>
