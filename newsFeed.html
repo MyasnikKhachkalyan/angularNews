@@ -1,6 +1,7 @@
-<div style="padding:50px">
+<div>
+  <a href="#!/"> <h1 style="text-align:center">NEWS</h1></a>
     <div>
-      <button type="submit">ADD</button>
+      <a ng-href="#!/addnew"><button type="submit">ADD</button></a>
       <div style="float: right;">
         <input ng-model="search.title" type="text"/>:Search
       </div> 
@@ -8,17 +9,18 @@
     <div ng-repeat="n in newsFeed |  filter:search" style="margin-top: 60px; display: block">
       <div style="display: flex;
       flex-direction: row;">
-        <img ng-src={{n.url}} alt="sorry cannot load img" height="300" />
+        <img ng-src="{{n.url}}" alt="sorry cannot load img" width="250" height="250"/>
         <div>
           <h2>{{n.title}}</h2>
           <p>{{n.description}}</p>
         </div>
       </div>
-      <div style="display: flex;
+      <div style="display: flex; 
       flex-direction: row; float: right;">
-        <button type="submit">Edit</button>
+        <a ng-href="#!/edit"><button type="submit" ng-click="editPageInit(n)" >Edit</button></a>
         <button type="submit" ng-click="removeNews(n)">Delete</button>
       </div>
     </div>
     
   </div>
+</div>  

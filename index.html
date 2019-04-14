@@ -2,11 +2,21 @@
 <html ng-app="newsApp">
   <head>
     <meta charset="utf-8">
-    <title>Angular.js Example</title>
+    <title>News Feed</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
     <script>
-      var newsApp = angular.module('newsApp', ['ngRoute']);
+      // localStorage.clear();
+      // localStorage.setItem("news", JSON.stringify([]));
+      // var news = JSON.parse(localStorage.getItem("news"));
+      // news.push({title: "China", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
+      // news.push({title: "India", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
+      // news.push({title: "USA", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
+     
+      // localStorage.setItem("news", JSON.stringify(news));
+
+
+      let newsApp = angular.module('newsApp', ['ngRoute']);
 
       newsApp.config(function($routeProvider) {
         $routeProvider.
@@ -14,31 +24,65 @@
             templateUrl: 'newsFeed.html',
             controller: 'NewsCtrl'
           }).
-          when('/:newAdded', {
+          when('/addnew', {
             templateUrl: 'addNews.html',
             controller: 'NewsCtrl'
+          }).
+          when('/edit',{
+            templateUrl: 'editNews.html',
+            controller: "NewsCtrl"
           }).
           otherwise({
             redirectTo: '/'
           });
-      });
-
+      });    
+        
       newsApp.controller('NewsCtrl', function ($scope){
-        $scope.newsFeed = [
-          {"title": "China", "url": "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
-          {"title": "India", "url": "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
-          {"title": "United States of America", "url": "http://qnimate.com/wp-content/uploads/2014/03/images2.jpg", "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
-        ];
+        $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
         
         $scope.removeNews = function(n) {
-          var i = $scope.newsFeed.indexOf(n);
-          $scope.newsFeed.splice(i, 1);
+          let i = $scope.newsFeed.indexOf(n);
+          let newNews = JSON.parse(localStorage.getItem("news"));
+          newNews.splice(i, 1);
+          localStorage.setItem("news", JSON.stringify(newNews));
+          $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
+
         };
 
-        $scope.addName = function() {
-          $scope.names.push($scope.enteredName);
-          $scope.enteredName = '';
+        $scope.addingNews = function() {
+          if (localStorage.length ===0) {
+            localStorage.setItem("news", JSON.stringify([]));
+          }
+          let newOne = JSON.parse(localStorage.getItem("news"));
+          newOne.push({
+            title: $scope.enteredTitle,
+            url: $scope.enteredUrl,
+            description: $scope.enteredDesc 
+          });
+          localStorage.setItem("news", JSON.stringify(newOne));
+          $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
+          
         };
+
+        $scope.editPageInit = function(n){
+          let index = $scope.newsFeed.indexOf(n);
+          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index]));
+        }
+        
+        $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
+        $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
+        $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
+        
+
+        $scope.editingNews = function(){
+          let newOne = JSON.parse(localStorage.getItem("news"));
+          let index = JSON.parse(localStorage.getItem("edit"))[3];
+          newOne[index].title = $scope.newTitle;
+          newOne[index].url = $scope.newUrl;
+          newOne[index].description = $scope.newDesc;
+          localStorage.setItem("news", JSON.stringify(newOne));
+          $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
+        }
 
 
       });
