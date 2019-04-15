@@ -6,7 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
     <script>
-      // localStorage.clear();
+       //localStorage.clear();
       // localStorage.setItem("news", JSON.stringify([]));
       // var news = JSON.parse(localStorage.getItem("news"));
       // news.push({title: "China", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
@@ -66,12 +66,18 @@
 
         $scope.editPageInit = function(n){
           let index = $scope.newsFeed.indexOf(n);
-          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index]));
+          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index, true]));
         }
+
+        $scope.$watch('JSON.parse(localStorage.getItem("edit"))', function(){
+          if(JSON.parse(localStorage.getItem('edit'))[4]){
+            $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
+            $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
+            $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
+          }
+        });
         
-        $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
-        $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
-        $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
+        
         
 
         $scope.editingNews = function(){
