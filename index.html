@@ -6,16 +6,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.min.js"></script>
     <script>
-       //localStorage.clear();
-      // localStorage.setItem("news", JSON.stringify([]));
-      // var news = JSON.parse(localStorage.getItem("news"));
-      // news.push({title: "China", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
-      // news.push({title: "India", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
-      // news.push({title: "USA", url: "https://anothervps.com/wp-content/uploads/2018/11/vultr-cloud-hosting-bird.png", description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."});
-     
-      // localStorage.setItem("news", JSON.stringify(news));
-
-
+      //  localStorage.clear();
+  
       let newsApp = angular.module('newsApp', ['ngRoute']);
 
       newsApp.config(function($routeProvider) {
@@ -29,7 +21,7 @@
             controller: 'NewsCtrl'
           }).
           when('/edit',{
-            templateUrl: 'editNews.html',
+            templateUrl: 'editNewsFeed.html',
             controller: "NewsCtrl"
           }).
           otherwise({
@@ -39,6 +31,7 @@
         
       newsApp.controller('NewsCtrl', function ($scope){
         $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
+        
         
         $scope.removeNews = function(n) {
           let i = $scope.newsFeed.indexOf(n);
@@ -56,7 +49,7 @@
           let newOne = JSON.parse(localStorage.getItem("news"));
           newOne.push({
             title: $scope.enteredTitle,
-            url: $scope.enteredUrl,
+            url: $scope.enteredUrl+"",
             description: $scope.enteredDesc 
           });
           localStorage.setItem("news", JSON.stringify(newOne));
@@ -66,14 +59,15 @@
 
         $scope.editPageInit = function(n){
           let index = $scope.newsFeed.indexOf(n);
-          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index, true]));
+          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index]));
+          localStorage.setItem("editInit", true);
         }
 
         $scope.$watch('JSON.parse(localStorage.getItem("edit"))', function(){
-          if(JSON.parse(localStorage.getItem('edit'))[4]){
-            $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
-            $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
-            $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
+          if(localStorage.getItem("editInit")){
+           $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
+           $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
+          $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
           }
         });
         
@@ -84,7 +78,7 @@
           let newOne = JSON.parse(localStorage.getItem("news"));
           let index = JSON.parse(localStorage.getItem("edit"))[3];
           newOne[index].title = $scope.newTitle;
-          newOne[index].url = $scope.newUrl;
+          newOne[index].url = $scope.newUrl+"";
           newOne[index].description = $scope.newDesc;
           localStorage.setItem("news", JSON.stringify(newOne));
           $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
