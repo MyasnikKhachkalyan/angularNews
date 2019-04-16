@@ -30,6 +30,48 @@
       });    
         
       newsApp.controller('NewsCtrl', function ($scope){
+
+        $scope.imageUpload = function(event){
+          console.log(event.target.files[0]);
+          if (localStorage.length ===0) {
+            localStorage.setItem("news", JSON.stringify([]));
+          }
+          let file = event.target.files[0];
+          let newOne = JSON.parse(localStorage.getItem("news"));
+          
+
+          let reader = new FileReader();
+            reader.onload = function(e){
+        		  $scope.$apply(function() {
+                newOne.push({
+                  title: "",
+                  url: e.target.result+"",
+                  description: "" 
+                });
+              localStorage.setItem("news", JSON.stringify(newOne));  
+              }); 
+            }
+
+            reader.readAsDataURL(file);
+         
+        }
+        $scope.imageUploadEdit = function(event){
+          console.log(event.target.files[0]);
+          let file = event.target.files[0];
+          let newOne = JSON.parse(localStorage.getItem("news"));
+          let index = JSON.parse(localStorage.getItem("edit"))[2];
+
+          let reader = new FileReader();
+            reader.onload = function(e){
+        		  $scope.$apply(function() {
+                newOne[index].url = e.target.result+"";
+              localStorage.setItem("news", JSON.stringify(newOne));  
+              }); 
+            }
+
+            reader.readAsDataURL(file);
+         
+        }
         $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
         
         
@@ -47,11 +89,8 @@
             localStorage.setItem("news", JSON.stringify([]));
           }
           let newOne = JSON.parse(localStorage.getItem("news"));
-          newOne.push({
-            title: $scope.enteredTitle,
-            url: $scope.enteredUrl+"",
-            description: $scope.enteredDesc 
-          });
+          newOne[newOne.length-1].title = $scope.enteredTitle;
+          newOne[newOne.length-1].description = $scope.enteredDesc;
           localStorage.setItem("news", JSON.stringify(newOne));
           $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
           
@@ -59,26 +98,26 @@
 
         $scope.editPageInit = function(n){
           let index = $scope.newsFeed.indexOf(n);
-          localStorage.setItem("edit", JSON.stringify([n.title, n.url, n.description, index]));
+          localStorage.setItem("edit", JSON.stringify([n.title, n.description, index]));
           localStorage.setItem("editInit", true);
         }
 
         $scope.$watch('JSON.parse(localStorage.getItem("edit"))', function(){
           if(localStorage.getItem("editInit")){
            $scope.newTitle = JSON.parse(localStorage.getItem('edit'))[0];
-           $scope.newUrl = JSON.parse(localStorage.getItem('edit'))[1];
-          $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[2];
+          $scope.newDesc = JSON.parse(localStorage.getItem('edit'))[1];
           }
         });
+
+        
         
         
         
 
         $scope.editingNews = function(){
           let newOne = JSON.parse(localStorage.getItem("news"));
-          let index = JSON.parse(localStorage.getItem("edit"))[3];
+          let index = JSON.parse(localStorage.getItem("edit"))[2];
           newOne[index].title = $scope.newTitle;
-          newOne[index].url = $scope.newUrl+"";
           newOne[index].description = $scope.newDesc;
           localStorage.setItem("news", JSON.stringify(newOne));
           $scope.newsFeed = JSON.parse(localStorage.getItem("news"));
